@@ -5,6 +5,7 @@ use warnings;
 use AnyEvent;
 use AnyEvent::HTTP::Request;
 use Carp;
+use Twiggy::Server;
 
 our $VERSION = "0.01";
 
@@ -26,7 +27,7 @@ sub new {
 }
 
 sub up {
-    my ($self) = @_;
+    my ($self, $app, $server_opt) = @_;
 
     my $config = $self->{config};
 
@@ -48,6 +49,12 @@ sub up {
             }
         }
     });
+
+    my $cv     = AnyEvent->condvar;
+    my $server = Twiggy::Server->new(%$server_opt);
+    $server->register_service($app);
+    print "Ready...\n";
+    $cv->recv;
 }
 
 sub post {
@@ -92,8 +99,8 @@ sub callback_later {
     my $timer = AnyEvent->timer(
         after => $after || 0,
         cb    => sub {
-            undef $timer,
-            $self->{callback}->($self),
+            undef $timer;
+            $self->{callback}->($self);
         },
     );
 }
