@@ -56,5 +56,16 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/moznion/Yancha-Bot2/issues"
+      },
+      "homepage" : "https://github.com/moznion/Yancha-Bot2",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/moznion/Yancha-Bot2.git",
+         "web" : "https://github.com/moznion/Yancha-Bot2"
+      }
+   },
    "version" : "0.01"
 }
