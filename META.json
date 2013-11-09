@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "ããããã£ã¡ã®ã»ãããããï¼",
    "author" : [
       "moznion <moznion@gmail.com>"
    ],
@@ -43,6 +43,9 @@
       },
       "runtime" : {
          "requires" : {
+            "AnyEvent" : "0",
+            "AnyEvent::HTTP::Request" : "0",
+            "Twiggy::Server" : "0",
             "perl" : "5.008005"
          }
       },

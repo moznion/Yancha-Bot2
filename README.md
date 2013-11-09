@@ -1,6 +1,6 @@
 # NAME
 
-Yancha::Bot2 - It's new $module
+Yancha::Bot2 - おい、こっちのほうがいいぞ！
 
 # SYNOPSIS
 
