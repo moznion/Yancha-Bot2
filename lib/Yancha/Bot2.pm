@@ -96,7 +96,8 @@ sub callback_later {
 
     return if $self->{callback};
 
-    my $timer = AnyEvent->timer(
+    my $timer;
+    $timer = AnyEvent->timer(
         after => $after || 0,
         cb    => sub {
             undef $timer;
