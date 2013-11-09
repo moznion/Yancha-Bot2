@@ -49,6 +49,7 @@ sub up {
             }
         }
     });
+    $req->send();
 
     my $cv     = AnyEvent->condvar;
     my $server = Twiggy::Server->new(%$server_opt);
