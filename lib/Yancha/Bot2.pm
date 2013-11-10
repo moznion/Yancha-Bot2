@@ -5,8 +5,7 @@ use warnings;
 use AnyEvent;
 use AnyEvent::HTTP::Request;
 use Carp;
-use HTTP::Request;
-use LWP::UserAgent;
+use Furl;
 use Twiggy::Server;
 use URI;
 
@@ -107,8 +106,7 @@ sub single_shot {
             nick       => $config->{bot_name},
             token_only => 1,
         );
-        my $auth_req = HTTP::Request->new('GET', $auth_uri->as_string);
-        $self->{auth_token} = LWP::UserAgent->new->request($auth_req)->content;
+        $self->{auth_token} = Furl->new->get($auth_uri->as_string)->content;
     }
 
     my $post_uri = URI->new($config->{yancha_url});
@@ -117,8 +115,7 @@ sub single_shot {
         token => $self->{auth_token},
         text  => $message,
     );
-    my $post_req = HTTP::Request->new('GET', $post_uri->as_string);
-    LWP::UserAgent->new->request($post_req);
+    Furl->new->get($post_uri->as_string);
 }
 
 sub callback_later {
@@ -220,7 +217,7 @@ bot活性化
 メッセージを投稿します (内部的にはAE+Twiggyで動作)。 C<up()>に与えるアプリケーション内で呼んで下さい。B<それ以外の場所で呼んでも何一つ良い事ありません。>
 
 =item * single_shot($message)
-メッセージを投稿します (普通にHTTP::Request+LWP::UAで動作)。単発で動作するので，C<up()>を呼ぶ必要がありません。
+メッセージを投稿します (内部的にはFurlで動作)。単発で動作するので，C<up()>を呼ぶ必要がありません。
 
 =back
 
