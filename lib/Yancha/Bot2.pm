@@ -16,7 +16,6 @@ sub new {
 
     # setup the default values
     $config               ||= {};
-    $config->{bot_name}   ||= 'YanchaBot';
     $config->{tags}       ||= ['#PUBLIC'];
     $callback             ||= sub {};
 
@@ -28,9 +27,18 @@ sub new {
         croak '投稿先URLが指定されていません';
     }
 
+    my $auth_uri = URI->new($config->{yancha_url});
+    $auth_uri->path('/login');
+    $auth_uri->query_form(
+        nick              => $config->{bot_name} || 'YanchaBot',
+        profile_image_url => $config->{profile_image_url} || '',
+        token_only => 1,
+    );
+
     bless +{
         config     => $config,
         callback   => $callback,
+        auth_uri   => $auth_uri,
         auth_token => '',
     }, $class;
 }
@@ -44,13 +52,7 @@ sub up {
         croak 'サーバのホスト及びポートが指定されていません';
     }
 
-    my $uri = URI->new($config->{yancha_url});
-    $uri->path('/login');
-    $uri->query_form(
-        nick       => $config->{bot_name},
-        token_only => 1,
-    );
-
+    my $uri = $self->{auth_uri};
     my $req = AnyEvent::HTTP::Request->new({
         method => 'GET',
         uri    => $uri->as_string,
@@ -100,12 +102,7 @@ sub single_shot {
     my $config = $self->{config};
 
     unless ($self->{auth_token}) {
-        my $auth_uri = URI->new($config->{yancha_url});
-        $auth_uri->path('/login');
-        $auth_uri->query_form(
-            nick       => $config->{bot_name},
-            token_only => 1,
-        );
+        my $auth_uri = $self->{auth_uri};
         $self->{auth_token} = Furl->new->get($auth_uri->as_string)->content;
     }
 
@@ -175,6 +172,7 @@ Yancha::Bot2 - Yancha向けbot作成支援モジュール。そのツー。
             host => 'http://your-server-url.com',
             port => '3000',
         },
+        profile_image_url => 'http://pyazo.hachiojipm.org/image/your-image-path',
     });
 
     my $app = sub {
