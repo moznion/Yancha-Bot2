@@ -77,20 +77,13 @@ sub post {
 
     my $config = $self->{config};
 
-    my @tags;
-    for my $tag (@{$config->{tags}}) {
-        my $correct_tag = $tag;
-        if (index($correct_tag, '#') != 0) {
-            $correct_tag = '#' . $correct_tag;
-        }
-        push @tags, $correct_tag;
-    }
+    my $serialized_tags = $self->_serialize_tags;
 
     my $uri = URI->new($config->{yancha_url});
     $uri->path('/api/post');
     $uri->query_form(
         token => $self->{auth_token},
-        text  => join (' ', $message, @tags),
+        text  => "$message $serialized_tags",
     );
 
     my $req = AnyEvent::HTTP::Request->new({
@@ -141,6 +134,25 @@ sub callback_later {
             $self->{callback}->($self);
         },
     );
+}
+
+sub _serialize_tags {
+    my ($self) = @_;
+
+    unless ($self->{_serialized_tags}) {
+        my $config = $self->{config};
+        my $serialized_tags = '';
+        for my $tag (@{$config->{tags}}) {
+            my $correct_tag = $tag;
+            if (index($correct_tag, '#') != 0) {
+                $correct_tag = '#' . $correct_tag;
+            }
+            $serialized_tags .= $correct_tag . ' ';
+        }
+        $self->{_serialized_tags} = $serialized_tags;
+    }
+
+    return $self->{_serialized_tags};
 }
 
 1;
