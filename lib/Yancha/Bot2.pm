@@ -14,10 +14,21 @@ sub new {
 
     # setup the default values
     $config               ||= {};
-    $config->{yancha_url} ||= 'http://127.0.0.1:3000';
     $config->{bot_name}   ||= 'YanchaBot';
     $config->{tags}       ||= ['#PUBLIC'];
     $callback             ||= sub {};
+
+    if (ref $config->{tags} ne 'ARRAY') {
+        croak "タグはArrayRefで与えてくれんと困りますよほんと";
+    }
+
+    unless ($config->{yancha_url}) {
+        croak '投稿先URLが指定されていません';
+    }
+
+    if (!$config->{server}->{host} || !$config->{server}->{port}) {
+        croak 'サーバのホスト及びポートが指定されていません';
+    }
 
     bless +{
         config     => $config,
@@ -27,7 +38,7 @@ sub new {
 }
 
 sub up {
-    my ($self, $app, $server_opt) = @_;
+    my ($self, $app) = @_;
 
     my $config = $self->{config};
 
@@ -52,7 +63,7 @@ sub up {
     $req->send();
 
     my $cv     = AnyEvent->condvar;
-    my $server = Twiggy::Server->new(%$server_opt);
+    my $server = Twiggy::Server->new(%{$self->{config}->{server}});
     $server->register_service($app);
     print "Ready...\n";
     $cv->recv;
@@ -62,10 +73,6 @@ sub post {
     my ($self, $message) = @_;
 
     my $config = $self->{config};
-
-    if (ref $config->{tags} ne 'ARRAY') {
-        croak "タグはArrayRefで与えてくれんと困りますよほんと";
-    }
 
     my @tags;
     for my $tag (@{$config->{tags}}) {
