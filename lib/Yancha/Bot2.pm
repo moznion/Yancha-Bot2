@@ -14,7 +14,7 @@ sub new {
 
     # setup the default values
     $config               ||= {};
-    $config->{server_url} ||= 'http://127.0.0.1:3000';
+    $config->{yancha_url} ||= 'http://127.0.0.1:3000';
     $config->{bot_name}   ||= 'YanchaBot';
     $config->{tags}       ||= ['#PUBLIC'];
     $callback             ||= sub {};
@@ -31,7 +31,7 @@ sub up {
 
     my $config = $self->{config};
 
-    my $uri = URI->new($config->{server_url});
+    my $uri = URI->new($config->{yancha_url});
     $uri->path('/login');
     $uri->query_form(
         nick       => $config->{bot_name},
@@ -76,7 +76,7 @@ sub post {
         push @tags, $correct_tag;
     }
 
-    my $uri = URI->new($config->{server_url});
+    my $uri = URI->new($config->{yancha_url});
     $uri->path('/api/post');
     $uri->query_form(
         token => $self->{auth_token},
