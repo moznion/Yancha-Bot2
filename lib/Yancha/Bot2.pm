@@ -6,6 +6,7 @@ use AnyEvent;
 use AnyEvent::HTTP::Request;
 use Carp;
 use Twiggy::Server;
+use URI;
 
 our $VERSION = "0.03";
 

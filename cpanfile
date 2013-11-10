@@ -1,6 +1,7 @@
 requires 'AnyEvent';
 requires 'AnyEvent::HTTP::Request';
 requires 'Twiggy::Server';
+requires 'URI';
 requires 'perl', '5.008005';
 
 on configure => sub {
