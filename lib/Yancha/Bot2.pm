@@ -5,6 +5,8 @@ use warnings;
 use AnyEvent;
 use AnyEvent::HTTP::Request;
 use Carp;
+use HTTP::Request;
+use LWP::UserAgent;
 use Twiggy::Server;
 use URI;
 
@@ -27,10 +29,6 @@ sub new {
         croak '投稿先URLが指定されていません';
     }
 
-    if (!$config->{server}->{host} || !$config->{server}->{port}) {
-        croak 'サーバのホスト及びポートが指定されていません';
-    }
-
     bless +{
         config     => $config,
         callback   => $callback,
@@ -42,6 +40,10 @@ sub up {
     my ($self, $app) = @_;
 
     my $config = $self->{config};
+
+    if (!$config->{server}->{host} || !$config->{server}->{port}) {
+        croak 'サーバのホスト及びポートが指定されていません';
+    }
 
     my $uri = URI->new($config->{yancha_url});
     $uri->path('/login');
@@ -100,6 +102,32 @@ sub post {
     $req->send;
 }
 
+sub single_shot {
+    my ($self, $message) = @_;
+
+    my $config = $self->{config};
+
+    unless ($self->{auth_token}) {
+        my $auth_uri = URI->new($config->{yancha_url});
+        $auth_uri->path('/login');
+        $auth_uri->query_form(
+            nick       => $config->{bot_name},
+            token_only => 1,
+        );
+        my $auth_req = HTTP::Request->new('GET', $auth_uri->as_string);
+        $self->{auth_token} = LWP::UserAgent->new->request($auth_req)->content;
+    }
+
+    my $post_uri = URI->new($config->{yancha_url});
+    $post_uri->path('/api/post');
+    $post_uri->query_form(
+        token => $self->{auth_token},
+        text  => $message,
+    );
+    my $post_req = HTTP::Request->new('GET', $post_uri->as_string);
+    LWP::UserAgent->new->request($post_req);
+}
+
 sub callback_later {
     my ($self, $after) = @_;
 
@@ -146,6 +174,9 @@ Yancha::Bot2 - Yancha向けbot作成支援モジュール。そのツー。
     };
 
     $bot->up($app);
+
+    # upせずに単発で投稿することも出来ます
+    $bot->single_shot('hello');
 
 =head1 DESCRIPTION
 
