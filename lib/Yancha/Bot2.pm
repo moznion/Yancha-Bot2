@@ -206,6 +206,24 @@ C<Yancha::Bot2-E<gt>new()>でYancha::Bot2のインスタンスを生成します
 
 SYNOPSISの場合，L<http://your-server-url.com:3000>になんらかのアクセスがあった時に，L<http://your-yancha-url.com:5000>に立っているyanchaに対して"hello #PUBLIC #PERL"というメッセージを"Awesome Bot"というユーザ名で投稿します。
 
+=head1 METHODS
+
+=over 4
+
+=item * new(\%args)
+コンストラクタ。SYNOPSIS参照。
+
+=item * up($app)
+bot活性化
+
+=item * post($message)
+メッセージを投稿します (内部的にはAE+Twiggyで動作)。 C<up()>に与えるアプリケーション内で呼んで下さい。B<それ以外の場所で呼んでも何一つ良い事ありません。>
+
+=item * single_shot($message)
+メッセージを投稿します (普通にHTTP::Request+LWP::UAで動作)。単発で動作するので，C<up()>を呼ぶ必要がありません。
+
+=back
+
 =head1 LICENSE
 
 Copyright (C) moznion.
