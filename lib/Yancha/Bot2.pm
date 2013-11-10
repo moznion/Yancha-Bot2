@@ -9,7 +9,7 @@ use Furl;
 use Twiggy::Server;
 use URI;
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 
 sub new {
     my ($class, $config, $callback) = @_;

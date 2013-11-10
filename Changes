@@ -2,6 +2,12 @@ Revision history for Perl extension Yancha-Bot2
 
 {{$NEXT}}
 
+0.04 2013-11-10T12:21:14Z
+
+    - Support single shot method
+    - Support specifying the profile image
+    - Bug fix
+
 0.03 2013-11-10T07:05:41Z
 
     - original version

@@ -45,7 +45,9 @@
          "requires" : {
             "AnyEvent" : "0",
             "AnyEvent::HTTP::Request" : "0",
+            "Furl" : "0",
             "Twiggy::Server" : "0",
+            "URI" : "0",
             "perl" : "5.008005"
          }
       },
@@ -67,5 +69,5 @@
          "web" : "https://github.com/moznion/Yancha-Bot2"
       }
    },
-   "version" : "0.03"
+   "version" : "0.04"
 }

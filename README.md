@@ -14,6 +14,7 @@ Yancha::Bot2 - Yancha向けbot作成支援モジュール。そのツー。
             host => 'http://your-server-url.com',
             port => '3000',
         },
+        profile_image_url => 'http://pyazo.hachiojipm.org/image/your-image-path',
     });
 
     my $app = sub {
@@ -22,6 +23,9 @@ Yancha::Bot2 - Yancha向けbot作成支援モジュール。そのツー。
     };
 
     $bot->up($app);
+
+    # upせずに単発で投稿することも出来ます
+    $bot->single_shot('hello');
 
 # DESCRIPTION
 
@@ -38,6 +42,17 @@ SYNOPSISのコードを例に取ります。
 そして，`$bot->up($app)`という風に，作成したアプリケーションを`$bot->up()`メソッドに食わせるとbotが起動します。
 
 SYNOPSISの場合，[http://your-server-url.com:3000](http://your-server-url.com:3000)になんらかのアクセスがあった時に，[http://your-yancha-url.com:5000](http://your-yancha-url.com:5000)に立っているyanchaに対して"hello \#PUBLIC \#PERL"というメッセージを"Awesome Bot"というユーザ名で投稿します。
+
+# METHODS
+
+- new(\\%args)
+コンストラクタ。SYNOPSIS参照。
+- up($app)
+bot活性化
+- post($message)
+メッセージを投稿します (内部的にはAE+Twiggyで動作)。 `up()`に与えるアプリケーション内で呼んで下さい。__それ以外の場所で呼んでも何一つ良い事ありません。__
+- single\_shot($message)
+メッセージを投稿します (内部的にはFurlで動作)。単発で動作するので，`up()`を呼ぶ必要がありません。なお，本メソッドではコンストラクタに与えられた\`tags\`の設定を無視します。
 
 # LICENSE
 
