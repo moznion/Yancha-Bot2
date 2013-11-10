@@ -7,7 +7,7 @@ use AnyEvent::HTTP::Request;
 use Carp;
 use Twiggy::Server;
 
-our $VERSION = "0.02";
+our $VERSION = "0.03";
 
 sub new {
     my ($class, $config, $callback) = @_;
@@ -118,6 +118,8 @@ sub callback_later {
 __END__
 
 =encoding utf-8
+
+=for stopwords yancha
 
 =head1 NAME
 

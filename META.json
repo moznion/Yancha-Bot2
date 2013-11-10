@@ -1,5 +1,5 @@
 {
-   "abstract" : "ããããã£ã¡ã®ã»ãããããï¼",
+   "abstract" : "Yanchaåãbotä½ææ¯æ´ã¢ã¸ã¥ã¼ã«ããã®ãã¼ã",
    "author" : [
       "moznion <moznion@gmail.com>"
    ],
@@ -67,5 +67,5 @@
          "web" : "https://github.com/moznion/Yancha-Bot2"
       }
    },
-   "version" : "0.02"
+   "version" : "0.03"
 }
